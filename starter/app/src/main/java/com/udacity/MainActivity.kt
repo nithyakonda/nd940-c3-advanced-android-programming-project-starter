@@ -28,6 +28,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var notificationManager: NotificationManager
     private lateinit var pendingIntent: PendingIntent
     private lateinit var action: NotificationCompat.Action
+    private lateinit var selectedFile: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,15 +44,15 @@ class MainActivity : AppCompatActivity() {
         // TODO: Implement code below
         binding.content.customButton.setOnClickListener {
             binding.content.apply {
-                download(
+                selectedFile =
                     when(radioGroup.checkedRadioButtonId) {
                         R.id.rbGlide -> "https://github.com/bumptech/glide"
                         R.id.rbGithub -> "https://github.com/udacity/nd940-c3-advanced-android-programming-project-starter"
                         R.id.rbRetrofit -> "https://github.com/square/retrofit"
                         else -> ""
                     }
-                )
             }
+            download(selectedFile)
         }
     }
 
@@ -63,7 +64,7 @@ class MainActivity : AppCompatActivity() {
                     context!!,
                     NotificationManager::class.java
                 ) as NotificationManager
-                notificationManager.sendNotification(context)
+                notificationManager.sendNotification(selectedFile, "Success", context)
                 Toast.makeText(context, "Download Completed", Toast.LENGTH_SHORT).show();
             }
         }
@@ -97,7 +98,6 @@ class MainActivity : AppCompatActivity() {
             DownloadManager.Request(Uri.parse(url))
                 .setTitle(getString(R.string.app_name))
                 .setDescription(getString(R.string.app_description))
-                .setRequiresCharging(false)
                 .setAllowedOverMetered(true)
                 .setAllowedOverRoaming(true)
 
