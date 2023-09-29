@@ -114,7 +114,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun download(url:String) {
         if (url.isEmpty()) {
-            Toast.makeText(this, "Please select a file to download", Toast.LENGTH_LONG)
+            Toast.makeText(this, "Please select a file to download", Toast.LENGTH_LONG).show()
             return
         }
         val request =

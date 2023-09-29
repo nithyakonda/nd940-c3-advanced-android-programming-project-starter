@@ -54,25 +54,6 @@ class LoadingButton @JvmOverloads constructor(
         }
     }
 
-    private fun startAnimation() {
-        valueAnimator.addUpdateListener { animator ->
-            animatedBtnWidth = widthSize * animator.getAnimatedValue() as Float
-            animatedSweepAngle = 360 * animator.getAnimatedValue() as Float
-            invalidate()
-        }
-        valueAnimator.addListener(object: AnimatorListenerAdapter(){
-            override fun onAnimationEnd(animation: Animator) {
-                animatedBtnWidth = 0f
-                animatedSweepAngle = 0f
-                if (buttonState == ButtonState.Loading) {
-                    buttonState = ButtonState.Loading
-                }
-            }
-        })
-        valueAnimator.start()
-    }
-
-
     init {
         isClickable = true
 
@@ -131,5 +112,22 @@ class LoadingButton @JvmOverloads constructor(
     override fun performClick(): Boolean {
         if (super.performClick()) return true
         return true
+    }
+    private fun startAnimation() {
+        valueAnimator.addUpdateListener { animator ->
+            animatedBtnWidth = widthSize * animator.getAnimatedValue() as Float
+            animatedSweepAngle = 360 * animator.getAnimatedValue() as Float
+            invalidate()
+        }
+        valueAnimator.addListener(object: AnimatorListenerAdapter(){
+            override fun onAnimationEnd(animation: Animator) {
+                animatedBtnWidth = 0f
+                animatedSweepAngle = 0f
+                if (buttonState == ButtonState.Loading) {
+                    buttonState = ButtonState.Loading
+                }
+            }
+        })
+        valueAnimator.start()
     }
 }

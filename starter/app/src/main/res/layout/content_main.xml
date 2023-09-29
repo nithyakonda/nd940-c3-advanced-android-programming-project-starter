@@ -14,13 +14,14 @@
         android:layout_width="0dp"
         android:layout_height="60dp"
         android:layout_margin="20dp"
+        android:contentDescription="@string/button_download"
         app:btnColorDefault="@color/colorPrimary"
         app:btnColorInProgress="@color/colorPrimaryDark"
         app:circleColor="@color/colorAccent"
-        app:textColor="@android:color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"  />
+        app:layout_constraintStart_toStartOf="parent"
+        app:textColor="@android:color/white" />
 
     <ImageView
         android:id="@+id/imageView"
@@ -30,7 +31,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@android:drawable/stat_sys_download"
+        app:srcCompat="@drawable/ic_cloud_download"
         app:tint="#673AB7" />
 
     <RadioGroup

@@ -28,7 +28,6 @@ class DetailActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-
         val notificationManager = ContextCompat.getSystemService(this, NotificationManager::class.java) as NotificationManager
         notificationManager.cancelAll()
     }
