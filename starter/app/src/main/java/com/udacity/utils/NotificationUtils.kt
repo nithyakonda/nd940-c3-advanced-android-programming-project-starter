@@ -17,7 +17,7 @@ fun NotificationManager.sendNotification(filename:String, status:String, context
     val pendingIntent = PendingIntent.getActivity(context,
         NOTIFICATION_ID,
         contentIntent,
-        PendingIntent.FLAG_UPDATE_CURRENT)
+        PendingIntent.FLAG_IMMUTABLE)
 
     val builder = NotificationCompat.Builder(context, context.getString(R.string.notification_channel_id))
         .setContentTitle(context.getString(R.string.notification_title))

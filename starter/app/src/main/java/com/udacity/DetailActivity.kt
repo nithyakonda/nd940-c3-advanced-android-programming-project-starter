@@ -27,7 +27,7 @@ class DetailActivity : AppCompatActivity() {
         binding.detailContent.buttonOk.setOnClickListener {
             startActivity(intent)
         }
-
+//        binding.detailContent.motionLayout.transitionToEnd()
 
 
         val notificationManager = ContextCompat.getSystemService(this, NotificationManager::class.java) as NotificationManager
