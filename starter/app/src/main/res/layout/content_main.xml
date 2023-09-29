@@ -9,20 +9,8 @@
     tools:context=".MainActivity"
     tools:showIn="@layout/activity_main">
 
-    <Button
-        android:id="@+id/custom_button"
-        android:layout_width="0dp"
-        android:layout_height="60dp"
-        android:layout_margin="20dp"
-        android:backgroundTint="@color/colorPrimary"
-        android:text="Download"
-        android:textColor="@color/white"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
     <com.udacity.LoadingButton
-        android:id="@+id/custom_button1"
+        android:id="@+id/custom_button"
         android:layout_width="0dp"
         android:layout_height="60dp"
         android:layout_margin="20dp"
@@ -30,10 +18,9 @@
         app:btnColorInProgress="@color/colorPrimaryDark"
         app:circleColor="@color/colorAccent"
         app:textColor="@android:color/white"
-        app:layout_constraintBottom_toTopOf="@+id/custom_button"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.6"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"  />
 
     <ImageView
         android:id="@+id/imageView"

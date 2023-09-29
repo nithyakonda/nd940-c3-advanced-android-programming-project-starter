@@ -23,7 +23,7 @@
     <string name="ok">OK</string>
     <string name="notification_extra_filename">filename</string>
     <string name="notification_extra_status">status</string>
-    <string name="button_download">DOWNLOAD</string>
+    <string name="button_download">Download</string>
 
 
 </resources>

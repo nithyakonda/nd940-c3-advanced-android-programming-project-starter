@@ -44,6 +44,7 @@ class MainActivity : AppCompatActivity() {
         // TODO: Implement code below
         binding.content.customButton.setOnClickListener {
             binding.content.apply {
+                customButton.buttonState = ButtonState.Clicked
                 selectedFile =
                     when(radioGroup.checkedRadioButtonId) {
                         R.id.rbGlide -> "https://github.com/bumptech/glide"
@@ -64,6 +65,7 @@ class MainActivity : AppCompatActivity() {
                     context!!,
                     NotificationManager::class.java
                 ) as NotificationManager
+                binding.content.customButton.buttonState = ButtonState.Completed
                 notificationManager.sendNotification(selectedFile, "Success", context)
                 Toast.makeText(context, "Download Completed", Toast.LENGTH_SHORT).show();
             }
@@ -104,6 +106,7 @@ class MainActivity : AppCompatActivity() {
         val downloadManager = getSystemService(DOWNLOAD_SERVICE) as DownloadManager
         downloadID =
             downloadManager.enqueue(request)// enqueue puts the download request in the queue.
+        binding.content.customButton.buttonState = ButtonState.Loading
     }
 
     companion object {

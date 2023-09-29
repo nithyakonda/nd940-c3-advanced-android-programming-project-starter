@@ -1,9 +1,12 @@
 package com.udacity
 
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
 import android.animation.ValueAnimator
 import android.content.Context
 import android.graphics.*
 import android.util.AttributeSet
+import android.util.Log
 import android.view.View
 import androidx.core.content.withStyledAttributes
 import kotlin.properties.Delegates
@@ -23,6 +26,7 @@ class LoadingButton @JvmOverloads constructor(
     private var circleColor = 0
     private var textColor = 0
     private var btnTextSize = resources.getDimension(R.dimen.default_text_size)
+    private var btnText = resources.getString(R.string.button_download)
 
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.FILL
@@ -30,8 +34,42 @@ class LoadingButton @JvmOverloads constructor(
         textSize = btnTextSize
     }
 
-    private var buttonState: ButtonState by Delegates.observable<ButtonState>(ButtonState.Completed) { p, old, new ->
+    var buttonState: ButtonState by Delegates.observable<ButtonState>(ButtonState.Completed) { p, old, new ->
+        when (new) {
+            ButtonState.Clicked -> {
 
+            }
+            ButtonState.Loading -> {
+                btnText = resources.getString(R.string.button_loading)
+                startAnimation()
+
+            }
+            ButtonState.Completed -> {
+                btnText = resources.getString(R.string.button_download)
+                animatedBtnWidth = 0f
+                animatedSweepAngle = 0f
+                valueAnimator.cancel()
+                invalidate()
+            }
+        }
+    }
+
+    private fun startAnimation() {
+        valueAnimator.addUpdateListener { animator ->
+            animatedBtnWidth = widthSize * animator.getAnimatedValue() as Float
+            animatedSweepAngle = 360 * animator.getAnimatedValue() as Float
+            invalidate()
+        }
+        valueAnimator.addListener(object: AnimatorListenerAdapter(){
+            override fun onAnimationEnd(animation: Animator) {
+                animatedBtnWidth = 0f
+                animatedSweepAngle = 0f
+                if (buttonState == ButtonState.Loading) {
+                    buttonState = ButtonState.Loading
+                }
+            }
+        })
+        valueAnimator.start()
     }
 
 
@@ -61,8 +99,8 @@ class LoadingButton @JvmOverloads constructor(
 
         // Write text
         paint.color = textColor
-        val textWidth = paint.measureText(context.getString(R.string.button_download))
-        canvas.drawText(context.getString(R.string.button_download),
+        val textWidth = paint.measureText(btnText)
+        canvas.drawText(btnText,
             widthSize.toFloat() / 2,
             heightSize / 2 - (paint.descent() + paint.ascent()) / 2,
             paint)
@@ -92,12 +130,6 @@ class LoadingButton @JvmOverloads constructor(
 
     override fun performClick(): Boolean {
         if (super.performClick()) return true
-        valueAnimator.start()
-        valueAnimator.addUpdateListener { animator ->
-            animatedBtnWidth = widthSize * animator.getAnimatedValue() as Float
-            animatedSweepAngle = 360 * animator.getAnimatedValue() as Float
-            invalidate()
-        }
         return true
     }
 }
