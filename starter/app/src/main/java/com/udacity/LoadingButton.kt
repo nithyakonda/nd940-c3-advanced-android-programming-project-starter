@@ -91,11 +91,11 @@ class LoadingButton @JvmOverloads constructor(
         super.onDraw(canvas)
         // Draw base rectangle
         paint.color = btnColorDefault
-        canvas.drawRect(0f, 0f, widthSize.toFloat(), heightSize.toFloat(), paint)
+        canvas.drawRoundRect(0f, 0f, widthSize.toFloat(), heightSize.toFloat(), heightSize.toFloat()/2, heightSize.toFloat()/2, paint)
 
         // Draw darker animated rectangle
         paint.color = btnColorInProgress
-        canvas.drawRect(0f, 0f, animatedBtnWidth, heightSize.toFloat(), paint)
+        canvas.drawRoundRect(0f, 0f, animatedBtnWidth, heightSize.toFloat(), heightSize.toFloat()/2, heightSize.toFloat()/2, paint)
 
         // Write text
         paint.color = textColor
@@ -107,9 +107,9 @@ class LoadingButton @JvmOverloads constructor(
 
         // Draw yellow animated circle
         canvas.save()
-        canvas.translate(widthSize / 2 + textWidth / 2 + 20, heightSize / 2 - btnTextSize / 2)
+        canvas.translate((widthSize - heightSize).toFloat(), 0f)
         paint.color = resources.getColor(R.color.colorAccent)
-        canvas.drawArc(RectF(0f, 0f, btnTextSize, btnTextSize),
+        canvas.drawArc(RectF(0f, 0f, heightSize.toFloat(), heightSize.toFloat()),
             0F, animatedSweepAngle, true, paint)
         canvas.restore()
     }

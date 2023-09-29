@@ -67,8 +67,9 @@
     <Button
         android:id="@+id/button_ok"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="60dp"
         android:backgroundTint="@color/colorAccent"
+        android:background="@drawable/round_button"
         android:text="@string/ok"
         android:textColor="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
