@@ -5,6 +5,7 @@ import android.content.Context
 import android.graphics.*
 import android.util.AttributeSet
 import android.view.View
+import androidx.core.content.withStyledAttributes
 import kotlin.properties.Delegates
 
 class LoadingButton @JvmOverloads constructor(
@@ -12,17 +13,22 @@ class LoadingButton @JvmOverloads constructor(
 ) : View(context, attrs, defStyleAttr) {
     private var widthSize = 0
     private var heightSize = 0
-    private var btnTextSize: Float = resources.getDimension(R.dimen.default_text_size)
+
+    private val valueAnimator = ValueAnimator()
+    private var animatedBtnWidth = 0f
+    private var animatedSweepAngle = 0f
+
+    private var btnColorDefault = 0
+    private var btnColorInProgress = 0
+    private var circleColor = 0
+    private var textColor = 0
+    private var btnTextSize = resources.getDimension(R.dimen.default_text_size)
 
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.FILL
         textAlign = Paint.Align.CENTER
         textSize = btnTextSize
     }
-
-    private val valueAnimator = ValueAnimator()
-    private var rectWidth:Float = 0.0f
-    private var sweepAngle:Float = 0f
 
     private var buttonState: ButtonState by Delegates.observable<ButtonState>(ButtonState.Completed) { p, old, new ->
 
@@ -31,6 +37,14 @@ class LoadingButton @JvmOverloads constructor(
 
     init {
         isClickable = true
+
+        context.withStyledAttributes(attrs, R.styleable.LoadingButton) {
+            btnColorDefault = getColor(R.styleable.LoadingButton_btnColorDefault, 0)
+            btnColorInProgress = getColor(R.styleable.LoadingButton_btnColorInProgress, 0)
+            circleColor = getColor(R.styleable.LoadingButton_circleColor, 0)
+            textColor = getColor(R.styleable.LoadingButton_textColor, 0)
+        }
+
         valueAnimator.setFloatValues(0f, 1f)
         valueAnimator.duration = 1000
     }
@@ -38,25 +52,28 @@ class LoadingButton @JvmOverloads constructor(
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
         // Draw base rectangle
-        paint.color = resources.getColor(R.color.colorPrimary)
+        paint.color = btnColorDefault
         canvas.drawRect(0f, 0f, widthSize.toFloat(), heightSize.toFloat(), paint)
 
-        // Draw darker rectangle which is animated
-        paint.color = resources.getColor(R.color.colorPrimaryDark)
-        canvas.drawRect(0f, 0f, rectWidth, heightSize.toFloat(), paint)
+        // Draw darker animated rectangle
+        paint.color = btnColorInProgress
+        canvas.drawRect(0f, 0f, animatedBtnWidth, heightSize.toFloat(), paint)
 
         // Write text
-        paint.color = Color.WHITE
+        paint.color = textColor
         val textWidth = paint.measureText(context.getString(R.string.button_download))
         canvas.drawText(context.getString(R.string.button_download),
-            widthSize.toFloat()/2, heightSize.toFloat()/2, paint)
+            widthSize.toFloat() / 2,
+            heightSize / 2 - (paint.descent() + paint.ascent()) / 2,
+            paint)
 
-        // Draw yellow circle which is animated
+        // Draw yellow animated circle
         canvas.save()
         canvas.translate(widthSize / 2 + textWidth / 2 + 20, heightSize / 2 - btnTextSize / 2)
         paint.color = resources.getColor(R.color.colorAccent)
-        canvas.drawArc(RectF(0f, 0f, btnTextSize, btnTextSize), 0F, sweepAngle, true, paint)
-
+        canvas.drawArc(RectF(0f, 0f, btnTextSize, btnTextSize),
+            0F, animatedSweepAngle, true, paint)
+        canvas.restore()
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
@@ -77,8 +94,8 @@ class LoadingButton @JvmOverloads constructor(
         if (super.performClick()) return true
         valueAnimator.start()
         valueAnimator.addUpdateListener { animator ->
-            rectWidth = widthSize * animator.getAnimatedValue() as Float
-            sweepAngle = 360 * animator.getAnimatedValue() as Float
+            animatedBtnWidth = widthSize * animator.getAnimatedValue() as Float
+            animatedSweepAngle = 360 * animator.getAnimatedValue() as Float
             invalidate()
         }
         return true
