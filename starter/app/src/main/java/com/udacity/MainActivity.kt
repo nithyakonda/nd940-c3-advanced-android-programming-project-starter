@@ -128,6 +128,11 @@ class MainActivity : AppCompatActivity() {
         binding.content.customButton.buttonState = ButtonState.Loading
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        unregisterReceiver(receiver)
+    }
+
     companion object {
         private const val URL =
             "https://github.com/udacity/nd940-c3-advanced-android-programming-project-starter/archive/master.zip"
