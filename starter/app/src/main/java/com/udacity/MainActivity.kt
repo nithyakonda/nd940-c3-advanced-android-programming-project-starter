@@ -1,5 +1,6 @@
 package com.udacity
 
+import android.annotation.SuppressLint
 import android.app.DownloadManager
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -26,6 +27,7 @@ class MainActivity : AppCompatActivity() {
     private var downloadID: Long = 0
 
     private lateinit var notificationManager: NotificationManager
+    private lateinit var downloadManager: DownloadManager
     private lateinit var pendingIntent: PendingIntent
     private lateinit var action: NotificationCompat.Action
     private lateinit var selectedFile: String
@@ -40,6 +42,11 @@ class MainActivity : AppCompatActivity() {
         createChannel(
             getString(R.string.notification_channel_id),
             getString(R.string.notification_channel_name))
+        notificationManager = ContextCompat.getSystemService(
+            this,
+            NotificationManager::class.java
+        ) as NotificationManager
+        downloadManager = getSystemService(DOWNLOAD_SERVICE) as DownloadManager
 
         // TODO: Implement code below
         binding.content.customButton.setOnClickListener {
@@ -61,15 +68,29 @@ class MainActivity : AppCompatActivity() {
         override fun onReceive(context: Context?, intent: Intent?) {
             val id = intent?.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1)
             if (downloadID == id) {
-                val notificationManager = ContextCompat.getSystemService(
-                    context!!,
-                    NotificationManager::class.java
-                ) as NotificationManager
                 binding.content.customButton.buttonState = ButtonState.Completed
-                notificationManager.sendNotification(selectedFile, "Success", context)
+                notificationManager.sendNotification(
+                    selectedFile,
+                    downloadStatus(id),
+                    context!!)
                 Toast.makeText(context, "Download Completed", Toast.LENGTH_SHORT).show();
             }
         }
+    }
+
+    @SuppressLint("Range")
+    private fun downloadStatus(id: Long?): String {
+        var result = "Failed"
+        val query = DownloadManager.Query()
+        query.setFilterById(id!!)
+        val cursor = downloadManager.query(query)
+        if (cursor.moveToFirst()) {
+            val status = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_STATUS))
+            if (DownloadManager.STATUS_SUCCESSFUL == status) {
+                result = "Success"
+            }
+        }
+        return result
     }
 
     private fun createChannel(channelId: String, channelName: String) {
@@ -102,8 +123,6 @@ class MainActivity : AppCompatActivity() {
                 .setDescription(getString(R.string.app_description))
                 .setAllowedOverMetered(true)
                 .setAllowedOverRoaming(true)
-
-        val downloadManager = getSystemService(DOWNLOAD_SERVICE) as DownloadManager
         downloadID =
             downloadManager.enqueue(request)// enqueue puts the download request in the queue.
         binding.content.customButton.buttonState = ButtonState.Loading
